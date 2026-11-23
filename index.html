@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eee8ff">
+<title>BRAVE TOWN | ELITE ADMIN SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#f6f3ff;--panel:#fff;--purple:#a78bfa;--purple2:#8b5cf6;
+ --dark:#211936;--muted:#827994;--line:#eee8fa;
+ --shadow:0 12px 35px rgba(83,55,135,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Cairo,sans-serif;background:var(--bg);color:var(--dark)}
+button,input{font-family:inherit}
+button{cursor:pointer;border:0}
+.login-screen{position:fixed;inset:0;z-index:10;background:linear-gradient(135deg,#f8f5ff,#e8ddff);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:410px;background:white;padding:35px;border-radius:28px;box-shadow:var(--shadow);text-align:center}
+.logo{width:100px;height:100px;object-fit:cover;border-radius:25px;border:3px solid #eee5ff}
+.login-card h1{font-size:23px;margin:15px 0 3px}
+.login-card p{color:var(--muted);font-size:13px}
+.login-card input{width:100%;padding:15px;border:1px solid var(--line);border-radius:13px;margin:15px 0;outline:none;text-align:center;font-size:18px}
+.primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;padding:13px 20px;border-radius:13px;font-weight:800}
+.login-card .primary{width:100%}
+#error{color:#dc4772;font-size:13px;min-height:22px}
+.app{display:none;min-height:100vh}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:260px;background:#fff;border-left:1px solid var(--line);padding:22px 15px;overflow:auto;z-index:3}
+.brand{display:flex;align-items:center;gap:12px;padding:5px 8px 25px;border-bottom:1px solid var(--line)}
+.brand img{width:48px;height:48px;object-fit:cover;border-radius:14px}
+.brand strong{display:block;font-size:14px}
+.brand small{color:var(--muted);font-size:10px}
+.nav-title{font-size:11px;color:#a49ab5;margin:22px 10px 8px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:right;background:transparent;color:#6d6380;padding:12px;border-radius:12px;margin:3px 0;font-weight:700}
+.nav button:hover,.nav button.active{background:#f1ebff;color:#8054df}
+.main{margin-right:260px;padding:28px;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:10px}
+.topbar h2{margin:0;font-size:22px}
+.topbar span{color:var(--muted);font-size:12px}
+.logout{background:#fff;color:#9b6be5;border:1px solid var(--line);padding:9px 15px;border-radius:12px}
+.page{display:none}.page.active{display:block}
+.welcome{background:linear-gradient(120deg,#d9c8ff,#f0eaff);border-radius:23px;padding:28px;margin-bottom:20px}
+.welcome h2{margin:0 0 7px;font-size:23px}
+.welcome p{margin:0;color:#69558d}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px;margin:18px 0}
+.stat,.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted)}
+.stat h2{font-size:27px;margin:8px 0 0;color:var(--purple2)}
+.card{margin:15px 0}
+.card h3{margin-top:0}
+.item{padding:13px 0;border-bottom:1px solid var(--line);line-height:1.9}
+.item:last-child{border:0}
+.tag{display:inline-block;background:#f0eaff;color:#8054df;padding:4px 10px;border-radius:20px;font-size:11px}
+table{width:100%;border-collapse:collapse;min-width:500px}
+th,td{padding:12px;text-align:right;border-bottom:1px solid var(--line);font-size:13px}
+th{color:#8669b4;background:#faf8ff}
+.table-wrap{overflow:auto}
+.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0 15px;outline:none}
+.note{background:#faf7ff;border-right:4px solid var(--purple);padding:13px;border-radius:10px;color:#6f6286;font-size:13px;line-height:2}
+@media(max-width:800px){
+ .sidebar{position:relative;width:100%;height:auto;bottom:auto;border-left:0;border-bottom:1px solid var(--line)}
+ .brand{padding-bottom:12px}
+ .nav{display:flex;overflow-x:auto;gap:5px}
+ .nav-title{display:none}
+ .nav button{white-space:nowrap;width:auto;flex-shrink:0;font-size:12px}
+ .main{margin:0;padding:17px}
+ .topbar h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+ <div class="login-card">
+  <img src="IMG_9522.jpeg" class="logo" alt="BRAVE TOWN">
+  <h1>BRAVE TOWN</h1>
+  <p>ELITE ADMIN SYSTEM</p>
+  <p>مرحباً بك في النظام الإداري الرسمي</p>
+  <input id="accessCode" type="password" placeholder="أدخل رمز الدخول" autocomplete="off">
+  <button class="primary" onclick="login()">تسجيل الدخول</button>
+  <div id="error"></div>
+ </div>
+</div>
+
+<div class="app" id="app">
+ <aside class="sidebar">
+  <div class="brand">
+   <img src="IMG_9522.jpeg" alt="Logo">
+   <div><strong>BRAVE TOWN</strong><small>ELITE ADMIN SYSTEM</small></div>
+  </div>
+  <div class="nav-title">القائمة الرئيسية</div>
+  <div class="nav">
+   <button class="active" onclick="showPage('home',this)">⌂ الرئيسية</button>
+   <button onclick="showPage('laws',this)">⚖ القوانين الإدارية</button>
+   <button onclick="showPage('promotions',this)">♛ الترقيات والنقاط</button>
+   <button onclick="showPage('top',this)">🏆 نظام TOP</button>
+   <button onclick="showPage('timeouts',this)">⏱ نظام التايمات</button>
+   <button onclick="showPage('instructions',this)">✦ التعليمات</button>
+  </div>
+ </aside>
+
+ <main class="main">
+  <div class="topbar">
+   <div><h2 id="pageTitle">الرئيسية</h2><span>BRAVE TOWN CFW · الإدارة العليا</span></div>
+   <button class="logout" onclick="logout()">تسجيل الخروج</button>
+  </div>
+
+  <section class="page active" id="home">
+   <div class="welcome">
+    <h2>مرحباً بك في النظام الإداري ♛</h2>
+    <p>منصة تنظيم ومتابعة الإدارة في BRAVE TOWN</p>
+   </div>
+   <div class="grid">
+    <div class="stat"><small>نظام الإدارة</small><h2>ELITE</h2></div>
+    <div class="stat"><small>الترقيات</small><h2>16 رتبة</h2></div>
+    <div class="stat"><small>نظام TOP</small><h2>TOP 1 / 2</h2></div>
+    <div class="stat"><small>التايمات</small><h2>30 قاعدة</h2></div>
+   </div>
+   <div class="card">
+    <h3>♛ رسالة الإدارة</h3>
+    <p>التميز يبدأ بالالتزام، والقيادة مسؤولية، والاحترام أساس العمل الإداري.</p>
+    <div class="note">يرجى الالتزام بجميع الأنظمة والتعليمات المعتمدة داخل BRAVE TOWN.</div>
+   </div>
+  </section>
+
+  <section class="page" id="laws">
+   <div class="card">
+    <h3>⚖ القوانين الإدارية</h3>
+    <input class="search" placeholder="ابحث عن قانون..." oninput="filterItems(this,'lawList')">
+    <div id="lawList">
+     <div class="item">يجب احترام جميع أعضاء الإدارة والتعامل معهم بأسلوب لائق.</div>
+     <div class="item">يمنع استغلال الصلاحيات الإدارية لتحقيق مصالح شخصية.</div>
+     <div class="item">يمنع طلب الترقيات من الإدارة العليا بشكل متكرر.</div>
+     <div class="item">يمنع التدخل في التذاكر التي لا تخص اختصاصك.</div>
+     <div class="item">يمنع مناقشة المواضيع الإدارية في القنوات غير المخصصة لها.</div>
+     <div class="item">يجب الالتزام بالتسلسل الإداري واحترام الرتب الأعلى.</div>
+     <div class="item">يمنع إعطاء الوعود للأعضاء باسم الإدارة دون صلاحية.</div>
+     <div class="item">يمنع استخدام الصلاحيات للانتقام أو تصفية الخلافات.</div>
+     <div class="item">يجب التعامل مع الشكاوى بحيادية واحترافية.</div>
+     <div class="item">يمنع نشر معلومات الإدارة الداخلية دون إذن.</div>
+     <div class="item">يجب التأكد من المخالفة قبل اتخاذ أي إجراء إداري.</div>
+     <div class="item">يمنع التحيز للأصدقاء أو أفراد العائلة في القرارات.</div>
+     <div class="item">يجب المحافظة على سمعة BRAVE TOWN داخل السيرفر وخارجه.</div>
+     <div class="item">يمنع انتحال رتبة أو صفة إدارية غير مستحقة.</div>
+     <div class="item">يجب تنفيذ توجيهات المسؤول الأعلى ضمن حدود الأنظمة.</div>
+     <div class="item">يمنع استخدام المنشن الإداري دون حاجة فعلية.</div>
+     <div class="item">يجب توثيق الإجراءات الإدارية المهمة عند الحاجة.</div>
+     <div class="item">يمنع حذف أو تعديل الأدلة المتعلقة بالمخالفات.</div>
+     <div class="item">يجب المحافظة على سرية بيانات الأعضاء.</div>
+     <div class="item">يمنع إثارة الخلافات بين أفراد الطاقم الإداري.</div>
+     <div class="item">يجب الرد على الاستفسارات ضمن حدود اختصاصك.</div>
+     <div class="item">يمنع تعطيل عمل إداري آخر دون سبب نظامي.</div>
+     <div class="item">يجب الالتزام بالقرارات الإدارية المعتمدة.</div>
+     <div class="item">يمنع إعطاء معلومات غير صحيحة للأعضاء.</div>
+     <div class="item">يجب المحافظة على الهدوء والاحترافية أثناء أداء المهام.</div>
+     <div class="item">يمنع استخدام الحسابات البديلة للتحايل على الأنظمة.</div>
+     <div class="item">يجب إبلاغ المسؤول عند وجود تعارض مصالح.</div>
+     <div class="item">يمنع استغلال ثقة الإدارة لتحقيق مكاسب شخصية.</div>
+     <div class="item">يجب احترام خصوصية المحادثات الإدارية.</div>
+     <div class="item">تطبق الإجراءات الإدارية على الجميع دون استثناء.</div>
+    </div>
+   </div>
+  </section>
+
+  <section class="page" id="promotions">
+   <div class="card">
+    <h3>♛ نظام الترقيات والنقاط</h3>
+    <p class="note">الترقيات تعتمد على استيفاء النقاط ومراجعة الإنجازات، ولا تعني النقاط وحدها ضمان الترقية.</p>
+    <div class="table-wrap">
+     <table>
+      <thead><tr><th>الرتبة</th><th>النقاط المطلوبة</th></tr></thead>
+      <tbody id="rankRows"></tbody>
+     </table>
+    </div>
+   </div>
+   <div class="card">
+    <h3>قوانين الترقيات</h3>
+    <div class="item">موعد الترقيات يوم السبت.</div>
+    <div class="item">يمنع تجاوز ثلاث ترقيات متتالية.</div>
+    <div class="item">يشترط استيفاء النقاط المطلوبة للترقية.</div>
+    <div class="item">تتم مراجعة الإنجازات قبل اعتماد الترقية.</div>
+    <div class="item">يمنع التلاعب بالنقاط أو احتساب نقاط غير مستحقة.</div>
+    <div class="item">لا يسمح بتحويل النقاط الأسبوعية بين الإداريين.</div>
+    <div class="item">الانتقال من Admin Manager إلى الإدارة الوسطى يكون بالترشيح واختيار الإدارة العليا.</div>
+   </div>
+  </section>
+
+  <section class="page" id="top">
+   <div class="grid">
+    <div class="card">
+     <h3>🏆 TOP 1</h3>
+     <p>يحصل صاحب المركز الأول على ترقيتين وأفضل رتبة إدارية مع إمكانية اختيار اللون.</p>
+     <span class="tag">المركز الأول</span>
+    </div>
+    <div class="card">
+     <h3>🥈 TOP 2</h3>
+     <p>يحصل صاحب المركز الثاني على ترقيتين.</p>
+     <span class="tag">المركز الثاني</span>
+    </div>
+   </div>
+   <div class="card">
+    <h3>آلية الترتيب</h3>
+    <p>يتم ترتيب الإداريين وفق مجموع النقاط المستحقة خلال فترة التقييم، وتتم مراجعة النتائج قبل إعلان الفائزين.</p>
+   </div>
+  </section>
+
+  <section class="page" id="timeouts">
+   <div class="card">
+    <h3>⏱ نظام التايمات</h3>
+    <p class="note">يتم تحديد مدة الإجراء حسب نوع المخالفة واللائحة المعتمدة، مع مراعاة التدرج والعدالة وتوثيق السبب.</p>
+    <div class="item">يمنع إعطاء تايم دون وجود سبب واضح.</div>
+    <div class="item">يجب التأكد من المخالفة قبل تطبيق الإجراء.</div>
+    <div class="item">يمنع استغلال التايمات في الخلافات الشخصية.</div>
+    <div class="item">يجب توضيح سبب الإجراء للعضو.</div>
+    <div class="item">يمنع تجاوز الصلاحيات المحددة للرتبة.</div>
+    <div class="item">يجب توثيق الإجراءات عند الحاجة للمراجعة.</div>
+    <div class="item">تتم مراجعة الاعتراضات من المسؤول المختص.</div>
+    <div class="item">تطبق اللائحة على جميع الأعضاء دون تمييز.</div>
+    <div class="item">يمنع تكرار العقوبة على المخالفة نفسها دون مبرر.</div>
+    <div class="item">يحق للإدارة مراجعة أي إجراء غير واضح.</div>
+   </div>
+  </section>
+
+  <section class="page" id="instructions">
+   <div class="card">
+    <h3>✦ التعليمات العامة</h3>
+    <div class="item">الالتزام بالاحترام المتبادل بين جميع الإداريين.</div>
+    <div class="item">المحافظة على النظام والاحترافية في أداء المهام.</div>
+    <div class="item">التعاون مع بقية أفراد الطاقم الإداري.</div>
+    <div class="item">رفع المشكلات للمسؤول المختص وعدم اتخاذ قرارات عشوائية.</div>
+    <div class="item">المحافظة على سرية المعلومات الإدارية.</div>
+    <div class="item">الالتزام بمواعيد التقييم والترقيات.</div>
+    <div class="item">عدم استخدام المنصب الإداري للتفاخر أو الإساءة للآخرين.</div>
+    <div class="item">القرارات النهائية تخضع لمراجعة الإدارة العليا.</div>
+   </div>
+  </section>
+ </main>
+</div>
+
+<script>
+const ACCESS_CODE = "673840";
+
+function login(){
+ const value=document.getElementById("accessCode").value.trim();
+ if(value===ACCESS_CODE){
+  sessionStorage.setItem("bt_admin_login","yes");
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("app").style.display="block";
+ }else{
+  document.getElementById("error").textContent="الرمز غير صحيح، حاول مرة أخرى";
+ }
+}
+document.getElementById("accessCode").addEventListener("keydown",e=>{
+ if(e.key==="Enter")login();
+});
+function logout(){
+ sessionStorage.removeItem("bt_admin_login");
+ location.reload();
+}
+if(sessionStorage.getItem("bt_admin_login")==="yes"){
+ document.getElementById("loginScreen").style.display="none";
+ document.getElementById("app").style.display="block";
+}
+function showPage(id,button){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ const titles={
+ home:"الرئيسية",laws:"القوانين الإدارية",promotions:"الترقيات والنقاط",
+ top:"نظام TOP",timeouts:"نظام التايمات",instructions:"التعليمات"
+ };
+ document.getElementById("pageTitle").textContent=titles[id];
+ window.scrollTo(0,0);
+}
+function filterItems(input,listId){
+ const q=input.value.trim().toLowerCase();
+ document.querySelectorAll("#"+listId+" .item").forEach(item=>{
+  item.style.display=item.textContent.toLowerCase().includes(q)?"":"none";
+ });
+}
+const ranks=[
+ ["Helper",14],["Advanced Helper",16],["Lead Helper",18],
+ ["Support",20],["Super Support",22],["Support Leader",24],
+ ["Mod",26],["Super Mod",28],["Staff",30],["Super Staff",32],
+ ["Staff Leader",34],["Supervisor",36],["Admin",38],
+ ["Admin Supervisor",40],["Head Admin",42],["Admin Manager",44]
+];
+document.getElementById("rankRows").innerHTML=ranks.map(r=>
+ `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`
+).join("");
+</script>
+</body>
+</html>
