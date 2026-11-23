@@ -9,288 +9,670 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#f6f3ff;--panel:#fff;--purple:#a78bfa;--purple2:#8b5cf6;
---dark:#211936;--muted:#827994;--line:#eee8fa;
---shadow:0 12px 35px rgba(83,55,135,.09)
+  --bg:#f7f5fc;
+  --panel:#ffffff;
+  --purple:#a78bfa;
+  --purple-dark:#7653c8;
+  --purple-light:#eee8ff;
+  --text:#211b30;
+  --muted:#817a91;
+  --border:#e9e3f3;
+  --dark:#211b30;
+  --shadow:0 12px 35px rgba(65,43,105,.08);
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Cairo,sans-serif;background:var(--bg);color:var(--dark)}
+body{
+  margin:0;
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 button,input{font-family:inherit}
-button{cursor:pointer;border:0}
-.login-screen{position:fixed;inset:0;z-index:10;background:linear-gradient(135deg,#f8f5ff,#e8ddff);display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card{width:100%;max-width:410px;background:white;padding:35px;border-radius:28px;box-shadow:var(--shadow);text-align:center}
-.logo{width:100px;height:100px;object-fit:cover;border-radius:25px;border:3px solid #eee5ff}
-.login-card h1{font-size:23px;margin:15px 0 3px}
-.login-card p{color:var(--muted);font-size:13px}
-.login-card input{width:100%;padding:15px;border:1px solid var(--line);border-radius:13px;margin:15px 0;outline:none;text-align:center;font-size:18px}
-.primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;padding:13px 20px;border-radius:13px;font-weight:800}
-.login-card .primary{width:100%}
-#error{color:#dc4772;font-size:13px;min-height:22px}
-.app{display:none;min-height:100vh}
-.sidebar{position:fixed;right:0;top:0;bottom:0;width:260px;background:#fff;border-left:1px solid var(--line);padding:22px 15px;overflow:auto;z-index:3}
-.brand{display:flex;align-items:center;gap:12px;padding:5px 8px 25px;border-bottom:1px solid var(--line)}
-.brand img{width:48px;height:48px;object-fit:cover;border-radius:14px}
-.brand strong{display:block;font-size:14px}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* LOGIN */
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:
+  radial-gradient(circle at 15% 20%,#e7dcff 0,transparent 32%),
+  radial-gradient(circle at 90% 80%,#ded1ff 0,transparent 30%),
+  #f8f6ff;
+}
+.login-card{
+  width:100%;
+  max-width:430px;
+  padding:38px 30px;
+  border:1px solid #fff;
+  border-radius:28px;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 25px 80px rgba(81,57,130,.15);
+  text-align:center;
+}
+.logo{
+  width:105px;height:105px;
+  object-fit:cover;
+  border-radius:25px;
+  border:4px solid var(--purple-light);
+  box-shadow:0 10px 25px #a78bfa33;
+}
+.login-card h1{
+  font-size:24px;
+  margin:18px 0 2px;
+  font-weight:900;
+}
+.login-card .sub{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:25px;
+}
+.login-card input{
+  width:100%;
+  border:1px solid var(--border);
+  background:#faf9fd;
+  padding:15px;
+  border-radius:14px;
+  outline:none;
+  text-align:center;
+  font-size:18px;
+  letter-spacing:5px;
+}
+.login-card input:focus{border-color:var(--purple)}
+.primary-btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  margin-top:14px;
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  background:linear-gradient(120deg,#b69aff,#7653c8);
+  box-shadow:0 8px 20px #9672df44;
+}
+.error{color:#dc4666;font-size:12px;margin-top:12px;min-height:20px}
+
+/* APP */
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:265px;
+  background:#fff;
+  border-left:1px solid var(--border);
+  padding:23px 17px;
+  position:fixed;
+  right:0;top:0;bottom:0;
+  overflow-y:auto;
+  z-index:10;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:5px 8px 24px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:20px;
+}
+.brand img{
+  width:48px;height:48px;
+  object-fit:cover;border-radius:14px;
+}
+.brand strong{display:block;font-size:14px;font-weight:900}
 .brand small{color:var(--muted);font-size:10px}
-.nav-title{font-size:11px;color:#a49ab5;margin:22px 10px 8px}
-.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:right;background:transparent;color:#6d6380;padding:12px;border-radius:12px;margin:3px 0;font-weight:700}
-.nav button:hover,.nav button.active{background:#f1ebff;color:#8054df}
-.main{margin-right:260px;padding:28px;max-width:1600px}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:10px}
-.topbar h2{margin:0;font-size:22px}
-.topbar span{color:var(--muted);font-size:12px}
-.logout{background:#fff;color:#9b6be5;border:1px solid var(--line);padding:9px 15px;border-radius:12px}
-.page{display:none}.page.active{display:block}
-.welcome{background:linear-gradient(120deg,#d9c8ff,#f0eaff);border-radius:23px;padding:28px;margin-bottom:20px}
-.welcome h2{margin:0 0 7px;font-size:23px}
-.welcome p{margin:0;color:#69558d}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px;margin:18px 0}
-.stat,.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
-.stat small{color:var(--muted)}
-.stat h2{font-size:27px;margin:8px 0 0;color:var(--purple2)}
-.card{margin:15px 0}
-.card h3{margin-top:0}
-.item{padding:13px 0;border-bottom:1px solid var(--line);line-height:1.9}
-.item:last-child{border:0}
-.tag{display:inline-block;background:#f0eaff;color:#8054df;padding:4px 10px;border-radius:20px;font-size:11px}
-table{width:100%;border-collapse:collapse;min-width:500px}
-th,td{padding:12px;text-align:right;border-bottom:1px solid var(--line);font-size:13px}
-th{color:#8669b4;background:#faf8ff}
-.table-wrap{overflow:auto}
-.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0 15px;outline:none}
-.note{background:#faf7ff;border-right:4px solid var(--purple);padding:13px;border-radius:10px;color:#6f6286;font-size:13px;line-height:2}
-@media(max-width:800px){
-.sidebar{position:relative;width:100%;height:auto;bottom:auto;border-left:0;border-bottom:1px solid var(--line)}
-.brand{padding-bottom:12px}
-.nav{display:flex;overflow-x:auto;gap:5px}
-.nav-title{display:none}
-.nav button{white-space:nowrap;width:auto;flex-shrink:0;font-size:12px}
-.main{margin:0;padding:17px}
-.topbar h2{font-size:17px}
+.nav-title{
+  color:#aaa2b7;
+  font-size:10px;
+  font-weight:800;
+  padding:10px 12px 7px;
+}
+.nav-btn{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  margin:4px 0;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#6d657b;
+  text-align:right;
+  font-size:13px;
+  font-weight:700;
+  transition:.2s;
+}
+.nav-btn:hover,.nav-btn.active{
+  background:var(--purple-light);
+  color:var(--purple-dark);
+}
+.nav-icon{font-size:17px;width:22px;text-align:center}
+.sidebar-bottom{
+  margin-top:30px;
+  padding:15px;
+  background:#f8f5ff;
+  border-radius:15px;
+  font-size:11px;
+  color:var(--muted);
+}
+.logout{
+  width:100%;
+  border:1px solid #f1dce5;
+  background:#fff7fa;
+  color:#c34b70;
+  padding:11px;
+  border-radius:12px;
+  margin-top:12px;
+  font-weight:800;
+}
+.main{
+  margin-right:265px;
+  width:calc(100% - 265px);
+  padding:27px 32px 50px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:27px;
+}
+.page-title{font-size:23px;font-weight:900;margin:0}
+.page-subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.top-user{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1px solid var(--border);
+  padding:8px 13px;border-radius:14px;
+  font-size:12px;font-weight:800;
+}
+.avatar{
+  width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;
+  background:var(--purple-light);color:var(--purple-dark);
+}
+.page{display:none}
+.page.active{display:block}
+.hero{
+  background:linear-gradient(115deg,#2c2240,#49356d 65%,#8064b9);
+  color:#fff;border-radius:24px;padding:30px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.hero:after{
+  content:"♛";position:absolute;
+  left:35px;top:-40px;
+  font-size:190px;color:#ffffff12;
+}
+.hero h2{font-size:25px;margin:0 0 8px;font-weight:900}
+.hero p{font-size:13px;color:#e5dcf5;margin:0;max-width:600px}
+.hero-tag{
+  display:inline-block;margin-top:20px;
+  padding:7px 13px;border-radius:30px;
+  background:#ffffff20;border:1px solid #ffffff25;
+  font-size:11px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;margin:20px 0;
+}
+.stat,.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:19px;
+  box-shadow:var(--shadow);
+}
+.stat-label{color:var(--muted);font-size:11px;font-weight:700}
+.stat-value{font-size:25px;font-weight:900;margin-top:7px}
+.stat-icon{
+  width:36px;height:36px;border-radius:12px;
+  background:var(--purple-light);
+  display:grid;place-items:center;
+  font-size:17px;margin-bottom:12px;
+}
+.content-grid{
+  display:grid;grid-template-columns:1.3fr 1fr;gap:16px;
+}
+.panel h3{margin:0 0 15px;font-size:15px;font-weight:900}
+.panel p{font-size:12px;color:var(--muted);line-height:2}
+.notice{
+  padding:13px;margin:9px 0;
+  background:#faf8ff;border:1px solid var(--border);
+  border-radius:12px;font-size:12px;
+}
+.notice strong{display:block;margin-bottom:4px}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:18px;flex-wrap:wrap;
+}
+.section-head h2{font-size:20px;margin:0;font-weight:900}
+.section-head p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.search{
+  border:1px solid var(--border);border-radius:12px;
+  background:#fff;padding:11px 14px;outline:none;
+  min-width:210px;
+}
+.search:focus{border-color:var(--purple)}
+.laws-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.law{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:15px;background:#fff;border:1px solid var(--border);
+  border-radius:14px;font-size:12px;line-height:1.9;
+}
+.law-num{
+  flex-shrink:0;width:29px;height:29px;
+  display:grid;place-items:center;border-radius:9px;
+  color:var(--purple-dark);background:var(--purple-light);
+  font-weight:900;
+}
+.table-wrap{
+  overflow-x:auto;background:#fff;border:1px solid var(--border);
+  border-radius:17px;box-shadow:var(--shadow);
+}
+table{width:100%;border-collapse:collapse;min-width:540px}
+th,td{padding:14px 16px;text-align:right;border-bottom:1px solid var(--border);font-size:12px}
+th{background:#f6f2ff;color:#69558f;font-weight:900}
+td{font-weight:700}
+tr:last-child td{border-bottom:0}
+.rank-number{
+  display:inline-block;background:var(--purple-light);
+  color:var(--purple-dark);padding:5px 10px;
+  border-radius:8px;font-weight:900;
+}
+.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.reward{
+  border-radius:18px;padding:22px;
+  background:linear-gradient(140deg,#fff,#f3edff);
+  border:1px solid #e5dafa;
+}
+.reward h3{margin:0 0 8px;font-size:18px}
+.reward p{font-size:12px;color:var(--muted);line-height:2}
+.reward .place{font-size:30px}
+.policy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.policy{
+  padding:17px;background:#fff;border:1px solid var(--border);
+  border-radius:15px;
+}
+.policy h3{font-size:13px;margin:0 0 7px}
+.policy p{font-size:11px;color:var(--muted);line-height:1.9;margin:0}
+.footer{
+  text-align:center;color:#aaa1b5;font-size:10px;margin-top:35px
+}
+.mobile-menu{display:none}
+@media(max-width:900px){
+  .sidebar{width:225px}
+  .main{margin-right:225px;width:calc(100% - 225px);padding:22px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .content-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .sidebar{
+    width:270px;transform:translateX(100%);
+    transition:.25s;box-shadow:0 0 40px #24133a20
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main{margin:0;width:100%;padding:18px 14px 35px}
+  .mobile-menu{
+    display:grid;place-items:center;width:40px;height:40px;
+    border:1px solid var(--border);background:#fff;border-radius:12px;
+    font-size:20px;
+  }
+  .topbar{align-items:flex-start}
+  .page-title{font-size:18px}
+  .top-user{font-size:10px;padding:6px}
+  .hero{padding:23px}
+  .hero h2{font-size:20px}
+  .stats{gap:9px}
+  .stat{padding:14px}
+  .stat-value{font-size:21px}
+  .laws-list,.policy-grid,.reward-grid{grid-template-columns:1fr}
+  .section-head{align-items:flex-start}
+  .search{width:100%}
 }
 </style>
 </head>
 <body>
 
-<div class="login-screen" id="loginScreen">
-<div class="login-card">
-<img src="IMG_9522.jpeg" class="logo" alt="BRAVE TOWN">
-<h1>BRAVE TOWN</h1>
-<p>ADMIN SYSTEM</p>
-<p>مرحباً بك في النظام الإداري الرسمي</p>
-<input id="accessCode" type="password" placeholder="أدخل رمز الدخول" autocomplete="off">
-<button class="primary" onclick="login()">تسجيل الدخول</button>
-<div id="error"></div>
-</div>
-</div>
-
-<div class="app" id="app">
-<aside class="sidebar">
-<div class="brand">
-<img src="IMG_9522.jpeg" alt="Logo">
-<div><strong>BRAVE TOWN</strong><small>ADMIN SYSTEM</small></div>
-</div>
-<div class="nav-title">القائمة الرئيسية</div>
-<div class="nav">
-<button class="active" onclick="showPage('home',this)">⌂ الرئيسية</button>
-<button onclick="showPage('laws',this)">⚖ القوانين الإدارية</button>
-<button onclick="showPage('promotions',this)">♛ الترقيات والنقاط</button>
-<button onclick="showPage('top',this)">🏆 نظام TOP</button>
-<button onclick="showPage('timeouts',this)">⏱ نظام التايمات</button>
-<button onclick="showPage('instructions',this)">✦ التعليمات</button>
-</div>
-</aside>
-
-<main class="main">
-<div class="topbar">
-<div><h2 id="pageTitle">الرئيسية</h2><span>BRAVE TOWN CFW · الإدارة</span></div>
-<button class="logout" onclick="logout()">تسجيل الخروج</button>
-</div>
-
-<section class="page active" id="home">
-<div class="welcome">
-<h2>مرحباً بك في النظام الإداري ♛</h2>
-<p>منصة تنظيم ومتابعة الإدارة في BRAVE TOWN</p>
-</div>
-<div class="grid">
-<div class="stat"><small>النظام الإداري</small><h2>BRAVE TOWN</h2></div>
-<div class="stat"><small>الترقيات</small><h2>16 رتبة</h2></div>
-<div class="stat"><small>نظام TOP</small><h2>TOP 1 / 2</h2></div>
-<div class="stat"><small>التايمات</small><h2>النظام الإداري</h2></div>
-</div>
-<div class="card">
-<h3>♛ رسالة الإدارة</h3>
-<p>التميز يبدأ بالالتزام، والقيادة مسؤولية، والاحترام أساس العمل الإداري.</p>
-<div class="note">يرجى الالتزام بجميع الأنظمة والتعليمات المعتمدة داخل BRAVE TOWN.</div>
-</div>
+<!-- LOGIN -->
+<section class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="IMG_9522.jpeg" class="logo" alt="BRAVE TOWN Logo">
+    <h1>BRAVE TOWN</h1>
+    <div class="sub">ADMINISTRATION SYSTEM</div>
+    <input id="password" type="password" inputmode="numeric" placeholder="أدخل رمز الدخول">
+    <button class="primary-btn" onclick="login()">دخول النظام</button>
+    <div class="error" id="error"></div>
+    <div style="font-size:10px;color:#aaa;margin-top:18px">OFFICIAL ADMIN PORTAL</div>
+  </div>
 </section>
 
-<section class="page" id="laws">
-<div class="card">
-<h3>⚖ القوانين الإدارية</h3>
-<input class="search" placeholder="ابحث عن قانون..." oninput="filterItems(this,'lawList')">
-<div id="lawList">
-<div class="item">يجب احترام جميع أعضاء الإدارة والتعامل معهم بأسلوب لائق.</div>
-<div class="item">يمنع استغلال الصلاحيات الإدارية لتحقيق مصالح شخصية.</div>
-<div class="item">يمنع طلب الترقيات من الإدارة العليا بشكل متكرر.</div>
-<div class="item">يمنع التدخل في التذاكر التي لا تخص اختصاصك.</div>
-<div class="item">يمنع مناقشة المواضيع الإدارية في القنوات غير المخصصة لها.</div>
-<div class="item">يجب الالتزام بالتسلسل الإداري واحترام الرتب الأعلى.</div>
-<div class="item">يمنع إعطاء الوعود للأعضاء باسم الإدارة دون صلاحية.</div>
-<div class="item">يمنع استخدام الصلاحيات للانتقام أو تصفية الخلافات.</div>
-<div class="item">يجب التعامل مع الشكاوى بحيادية واحترافية.</div>
-<div class="item">يمنع نشر معلومات الإدارة الداخلية دون إذن.</div>
-<div class="item">يجب التأكد من المخالفة قبل اتخاذ أي إجراء إداري.</div>
-<div class="item">يمنع التحيز للأصدقاء أو أفراد العائلة في القرارات.</div>
-<div class="item">يجب المحافظة على سمعة BRAVE TOWN داخل السيرفر وخارجه.</div>
-<div class="item">يمنع انتحال رتبة أو صفة إدارية غير مستحقة.</div>
-<div class="item">يجب تنفيذ توجيهات المسؤول الأعلى ضمن حدود الأنظمة.</div>
-<div class="item">يمنع استخدام المنشن الإداري دون حاجة فعلية.</div>
-<div class="item">يجب توثيق الإجراءات الإدارية المهمة عند الحاجة.</div>
-<div class="item">يمنع حذف أو تعديل الأدلة المتعلقة بالمخالفات.</div>
-<div class="item">يجب المحافظة على سرية بيانات الأعضاء.</div>
-<div class="item">يمنع إثارة الخلافات بين أفراد الطاقم الإداري.</div>
-<div class="item">يجب الرد على الاستفسارات ضمن حدود اختصاصك.</div>
-<div class="item">يمنع تعطيل عمل إداري آخر دون سبب نظامي.</div>
-<div class="item">يجب الالتزام بالقرارات الإدارية المعتمدة.</div>
-<div class="item">يمنع إعطاء معلومات غير صحيحة للأعضاء.</div>
-<div class="item">يجب المحافظة على الهدوء والاحترافية أثناء أداء المهام.</div>
-<div class="item">يمنع استخدام الحسابات البديلة للتحايل على الأنظمة.</div>
-<div class="item">يجب إبلاغ المسؤول عند وجود تعارض مصالح.</div>
-<div class="item">يمنع استغلال ثقة الإدارة لتحقيق مكاسب شخصية.</div>
-<div class="item">يجب احترام خصوصية المحادثات الإدارية.</div>
-<div class="item">تطبق الإجراءات الإدارية على الجميع دون استثناء.</div>
-</div>
-</div>
-</section>
+<!-- APPLICATION -->
+<div class="app hidden" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="IMG_9522.jpeg" alt="Logo">
+      <div>
+        <strong>BRAVE TOWN</strong>
+        <small>ADMIN SYSTEM</small>
+      </div>
+    </div>
 
-<section class="page" id="promotions">
-<div class="card">
-<h3>♛ نظام الترقيات والنقاط</h3>
-<p class="note">الترقيات تعتمد على استيفاء النقاط ومراجعة الإنجازات، ولا تعني النقاط وحدها ضمان الترقية.</p>
-<div class="table-wrap">
-<table>
-<thead><tr><th>الرتبة</th><th>النقاط المطلوبة</th></tr></thead>
-<tbody id="rankRows"></tbody>
-</table>
-</div>
-</div>
-<div class="card">
-<h3>قوانين الترقيات</h3>
-<div class="item">موعد الترقيات يوم السبت.</div>
-<div class="item">يمنع تجاوز ثلاث ترقيات متتالية.</div>
-<div class="item">يشترط استيفاء النقاط المطلوبة للترقية.</div>
-<div class="item">تتم مراجعة الإنجازات قبل اعتماد الترقية.</div>
-<div class="item">يمنع التلاعب بالنقاط أو احتساب نقاط غير مستحقة.</div>
-<div class="item">لا يسمح بتحويل النقاط الأسبوعية بين الإداريين.</div>
-<div class="item">الانتقال من Admin Manager إلى الإدارة الوسطى يكون بالترشيح واختيار الإدارة العليا.</div>
-</div>
-</section>
+    <div class="nav-title">القائمة الرئيسية</div>
+    <button class="nav-btn active" data-page="home" onclick="showPage('home',this)"><span class="nav-icon">⌂</span>الرئيسية</button>
+    <button class="nav-btn" data-page="laws" onclick="showPage('laws',this)"><span class="nav-icon">⚖</span>القوانين الإدارية</button>
+    <button class="nav-btn" data-page="promotions" onclick="showPage('promotions',this)"><span class="nav-icon">♛</span>نظام الترقيات</button>
+    <button class="nav-btn" data-page="top" onclick="showPage('top',this)"><span class="nav-icon">🏆</span>نظام TOP</button>
+    <button class="nav-btn" data-page="timeouts" onclick="showPage('timeouts',this)"><span class="nav-icon">⏱</span>نظام التايمات</button>
+    <button class="nav-btn" data-page="guide" onclick="showPage('guide',this)"><span class="nav-icon">✦</span>التعليمات العامة</button>
 
-<section class="page" id="top">
-<div class="grid">
-<div class="card">
-<h3>🏆 TOP 1</h3>
-<p>يحصل صاحب المركز الأول على ترقيتين وأفضل رتبة إدارية مع إمكانية اختيار اللون.</p>
-<span class="tag">المركز الأول</span>
-</div>
-<div class="card">
-<h3>🥈 TOP 2</h3>
-<p>يحصل صاحب المركز الثاني على ترقيتين.</p>
-<span class="tag">المركز الثاني</span>
-</div>
-</div>
-<div class="card">
-<h3>آلية الترتيب</h3>
-<p>يتم ترتيب الإداريين وفق مجموع النقاط المستحقة خلال فترة التقييم، وتتم مراجعة النتائج قبل إعلان الفائزين.</p>
-</div>
-</section>
+    <div class="sidebar-bottom">
+      <strong>♛ BRAVE TOWN</strong>
+      <div>نظام الإدارة الرسمي</div>
+      <button class="logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </aside>
 
-<section class="page" id="timeouts">
-<div class="card">
-<h3>⏱ نظام التايمات</h3>
-<p class="note">يتم تحديد مدة الإجراء حسب نوع المخالفة واللائحة المعتمدة، مع مراعاة التدرج والعدالة وتوثيق السبب.</p>
-<div class="item">يمنع إعطاء تايم دون وجود سبب واضح.</div>
-<div class="item">يجب التأكد من المخالفة قبل تطبيق الإجراء.</div>
-<div class="item">يمنع استغلال التايمات في الخلافات الشخصية.</div>
-<div class="item">يجب توضيح سبب الإجراء للعضو.</div>
-<div class="item">يمنع تجاوز الصلاحيات المحددة للرتبة.</div>
-<div class="item">يجب توثيق الإجراءات عند الحاجة للمراجعة.</div>
-<div class="item">تتم مراجعة الاعتراضات من المسؤول المختص.</div>
-<div class="item">تطبق اللائحة على جميع الأعضاء دون تمييز.</div>
-<div class="item">يمنع تكرار العقوبة على المخالفة نفسها دون مبرر.</div>
-<div class="item">يحق للإدارة مراجعة أي إجراء غير واضح.</div>
-</div>
-</section>
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+        <div>
+          <h1 class="page-title" id="pageTitle">لوحة التحكم</h1>
+          <div class="page-subtitle">مرحباً بك في نظام إدارة BRAVE TOWN</div>
+        </div>
+      </div>
+      <div class="top-user">
+        <div class="avatar">♛</div>
+        <span>الإدارة العامة</span>
+      </div>
+    </header>
 
-<section class="page" id="instructions">
-<div class="card">
-<h3>✦ التعليمات العامة</h3>
-<div class="item">الالتزام بالاحترام المتبادل بين جميع الإداريين.</div>
-<div class="item">المحافظة على النظام والاحترافية في أداء المهام.</div>
-<div class="item">التعاون مع بقية أفراد الطاقم الإداري.</div>
-<div class="item">رفع المشكلات للمسؤول المختص وعدم اتخاذ قرارات عشوائية.</div>
-<div class="item">المحافظة على سرية المعلومات الإدارية.</div>
-<div class="item">الالتزام بمواعيد التقييم والترقيات.</div>
-<div class="item">عدم استخدام المنصب الإداري للتفاخر أو الإساءة للآخرين.</div>
-<div class="item">القرارات النهائية تخضع لمراجعة الإدارة العليا.</div>
-</div>
-</section>
-</main>
+    <!-- HOME -->
+    <section class="page active" id="home">
+      <div class="hero">
+        <h2>مرحباً بك في النظام الإداري</h2>
+        <p>منصة BRAVE TOWN الرسمية لتنظيم العمل الإداري ومتابعة القوانين والترقيات والإنجازات بكل احترافية.</p>
+        <span class="hero-tag">♛ OFFICIAL ADMINISTRATION</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-icon">⚖</div>
+          <div class="stat-label">القوانين الإدارية</div>
+          <div class="stat-value">30</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">♛</div>
+          <div class="stat-label">مراحل الترقيات</div>
+          <div class="stat-value">16</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-label">مراكز TOP</div>
+          <div class="stat-value">02</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">⏱</div>
+          <div class="stat-label">نظام الانضباط</div>
+          <div class="stat-value">فعال</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="panel">
+          <h3>✦ نبذة عن النظام</h3>
+          <p>تم إنشاء هذا النظام ليكون مرجعاً موحداً للإدارة، ويساعد على تنظيم المهام الإدارية وتوضيح الأنظمة والتعليمات، وتحقيق العدالة بين جميع أفراد الطاقم.</p>
+          <div class="notice"><strong>♛ الالتزام الإداري</strong>يجب على جميع الإداريين الاطلاع على القوانين والعمل بها.</div>
+          <div class="notice"><strong>✦ نظام الترقيات</strong>تعتمد الترقيات على النقاط والنشاط والإنجازات واستحقاق الإداري.</div>
+        </div>
+        <div class="panel">
+          <h3>📌 تنبيهات مهمة</h3>
+          <div class="notice"><strong>01 — الاحترام</strong>الاحترام أساس التعامل بين أعضاء الإدارة.</div>
+          <div class="notice"><strong>02 — الصلاحيات</strong>يمنع استخدام الصلاحيات الإدارية لأغراض شخصية.</div>
+          <div class="notice"><strong>03 — المسؤولية</strong>كل إداري مسؤول عن قراراته وتصرفاته.</div>
+          <div class="notice"><strong>04 — التطوير</strong>الهدف هو تحسين جودة الإدارة باستمرار.</div>
+        </div>
+      </div>
+      <div class="footer">BRAVE TOWN © 2026 — ALL RIGHTS RESERVED</div>
+    </section>
+
+    <!-- LAWS -->
+    <section class="page" id="laws">
+      <div class="section-head">
+        <div><h2>القوانين الإدارية</h2><p>القواعد والتعليمات الواجب الالتزام بها من جميع الإداريين</p></div>
+        <input class="search" id="lawSearch" placeholder="ابحث عن قانون..." oninput="filterLaws()">
+      </div>
+      <div class="laws-list" id="lawsList"></div>
+    </section>
+
+    <!-- PROMOTIONS -->
+    <section class="page" id="promotions">
+      <div class="section-head">
+        <div><h2>نظام الترقيات والنقاط</h2><p>جدول الرتب والنقاط المطلوبة لكل مرحلة</p></div>
+      </div>
+      <div class="panel" style="margin-bottom:16px">
+        <h3>📌 آلية الترقيات</h3>
+        <p>تتم مراجعة الترقيات يوم السبت من كل أسبوع. يسمح بحد أقصى ثلاث ترقيات متتالية وفق الاستحقاق، مع مراجعة نشاط الإداري وإنجازاته والتزامه بالقوانين.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>الرتبة</th><th>النقاط المطلوبة</th><th>التصنيف</th></tr></thead>
+          <tbody id="rankTable"></tbody>
+        </table>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>شروط اعتماد الترقية</h3>
+        <p>• تحقيق النقاط المطلوبة للرتبة التالية</p>
+        <p>• الالتزام بالقوانين والأنظمة الإدارية</p>
+        <p>• وجود نشاط ومساهمات واضحة</p>
+        <p>• مراجعة الإنجازات قبل اعتماد الترقية</p>
+        <p>• يمنع التلاعب بالنقاط أو نقلها دون موافقة</p>
+        <p>• الانتقال من Admin Manager إلى الإدارة الوسطى يكون بالترشيح والاختيار من الإدارة العليا</p>
+      </div>
+    </section>
+
+    <!-- TOP -->
+    <section class="page" id="top">
+      <div class="section-head">
+        <div><h2>نظام TOP الأسبوعي</h2><p>تكريم الإداريين الأكثر نشاطاً وإنجازاً</p></div>
+      </div>
+      <div class="reward-grid">
+        <div class="reward">
+          <div class="place">🥇</div>
+          <h3>TOP 1</h3>
+          <p>يحصل صاحب المركز الأول على ترقيتين، وأفضل رتبة إدارية متاحة وفق الاستحقاق، مع إمكانية اختيار لون الرتبة.</p>
+        </div>
+        <div class="reward">
+          <div class="place">🥈</div>
+          <h3>TOP 2</h3>
+          <p>يحصل صاحب المركز الثاني على ترقيتين وفق نظام الترقيات المعتمد.</p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>طريقة احتساب TOP</h3>
+        <p>يعتمد الترتيب على مجموع النقاط والإنجازات والنشاط الفعلي خلال الفترة المحددة، وتتم مراجعة النتائج قبل إعلان الفائزين.</p>
+        <p>يحق للإدارة مراجعة أي نقاط غير مستحقة واستبعاد أي تلاعب مثبت.</p>
+      </div>
+    </section>
+
+    <!-- TIMEOUTS -->
+    <section class="page" id="timeouts">
+      <div class="section-head">
+        <div><h2>نظام التايمات والانضباط</h2><p>ضوابط استخدام العقوبات الإدارية</p></div>
+      </div>
+      <div class="policy-grid">
+        <div class="policy"><h3>01 — التأكد من المخالفة</h3><p>يجب التأكد من وجود مخالفة واضحة قبل اتخاذ أي إجراء إداري.</p></div>
+        <div class="policy"><h3>02 — تناسب العقوبة</h3><p>يجب أن يتناسب الإجراء مع نوع المخالفة وظروفها.</p></div>
+        <div class="policy"><h3>03 — توثيق الإجراء</h3><p>يجب توضيح سبب الإجراء والاحتفاظ بما يثبت المخالفة عند الحاجة.</p></div>
+        <div class="policy"><h3>04 — منع التعسف</h3><p>يمنع استخدام التايم أو العقوبات بسبب خلاف شخصي.</p></div>
+        <div class="policy"><h3>05 — مراجعة القرارات</h3><p>يحق للمسؤولين مراجعة القرارات الإدارية عند وجود اعتراض أو خطأ.</p></div>
+        <div class="policy"><h3>06 — احترام الصلاحيات</h3><p>يمنع تجاوز الصلاحيات أو التدخل في قرارات مسؤول أعلى دون مسوغ.</p></div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>ملاحظة تنظيمية</h3>
+        <p>هذا القسم يوضح الضوابط العامة فقط. يجب إضافة مدد التايمات التفصيلية وأنواع المخالفات المعتمدة من الإدارة قبل اعتبارها جدولاً رسمياً للعقوبات.</p>
+      </div>
+    </section>
+
+    <!-- GUIDE -->
+    <section class="page" id="guide">
+      <div class="section-head">
+        <div><h2>التعليمات العامة</h2><p>إرشادات العمل والسلوك الإداري</p></div>
+      </div>
+      <div class="policy-grid">
+        <div class="policy"><h3>✦ الاحترام المتبادل</h3><p>يجب احترام جميع الأعضاء والإداريين والتعامل بأسلوب لائق.</p></div>
+        <div class="policy"><h3>✦ الالتزام بالقنوات</h3><p>يمنع طرح المواضيع الإدارية في القنوات غير المخصصة لها.</p></div>
+        <div class="policy"><h3>✦ عدم طلب الرتب</h3><p>يمنع الإلحاح بطلب الترقيات أو المناصب الإدارية.</p></div>
+        <div class="policy"><h3>✦ عدم التدخل</h3><p>يمنع التدخل في التذاكر أو المهام المسندة إلى إداري آخر دون إذن.</p></div>
+        <div class="policy"><h3>✦ حفظ الخصوصية</h3><p>يمنع نشر المعلومات أو المحادثات الإدارية الخاصة دون تصريح.</p></div>
+        <div class="policy"><h3>✦ تمثيل السيرفر</h3><p>يجب على الإداري المحافظة على سمعة BRAVE TOWN داخل السيرفر وخارجه.</p></div>
+        <div class="policy"><h3>✦ استخدام الصلاحيات</h3><p>تستخدم الصلاحيات لخدمة النظام وحفظ الانضباط فقط.</p></div>
+        <div class="policy"><h3>✦ التعاون</h3><p>يجب التعاون مع بقية الإداريين ومساعدة الأعضاء عند الحاجة.</p></div>
+      </div>
+    </section>
+
+    <div class="footer">BRAVE TOWN ADMIN SYSTEM — DESIGNED FOR BRAVE TOWN</div>
+  </main>
 </div>
 
 <script>
-const ACCESS_CODE="673840";
+const ACCESS_CODE = "673840";
 
 function login(){
-const value=document.getElementById("accessCode").value.trim();
-if(value===ACCESS_CODE){
-sessionStorage.setItem("bt_admin_login","yes");
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("app").style.display="block";
-}else{
-document.getElementById("error").textContent="الرمز غير صحيح، حاول مرة أخرى";
+  const value=document.getElementById("password").value.trim();
+  const error=document.getElementById("error");
+  if(value===ACCESS_CODE){
+    sessionStorage.setItem("bt_admin_access","true");
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+  }else{
+    error.textContent="رمز الدخول غير صحيح، حاول مرة أخرى";
+  }
 }
-}
-document.getElementById("accessCode").addEventListener("keydown",e=>{
-if(e.key==="Enter")login();
+document.getElementById("password").addEventListener("keydown",e=>{
+  if(e.key==="Enter")login();
 });
 function logout(){
-sessionStorage.removeItem("bt_admin_login");
-location.reload();
+  sessionStorage.removeItem("bt_admin_access");
+  location.reload();
 }
-if(sessionStorage.getItem("bt_admin_login")==="yes"){
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("app").style.display="block";
+if(sessionStorage.getItem("bt_admin_access")==="true"){
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
 }
-function showPage(id,button){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-button.classList.add("active");
-const titles={
-home:"الرئيسية",laws:"القوانين الإدارية",promotions:"الترقيات والنقاط",
-top:"نظام TOP",timeouts:"نظام التايمات",instructions:"التعليمات"
+
+const pages={
+  home:"لوحة التحكم",
+  laws:"القوانين الإدارية",
+  promotions:"نظام الترقيات",
+  top:"نظام TOP",
+  timeouts:"نظام التايمات",
+  guide:"التعليمات العامة"
 };
-document.getElementById("pageTitle").textContent=titles[id];
-window.scrollTo(0,0);
+function showPage(id,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(button)button.classList.add("active");
+  document.getElementById("pageTitle").textContent=pages[id];
+  document.getElementById("sidebar").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function filterItems(input,listId){
-const q=input.value.trim().toLowerCase();
-document.querySelectorAll("#"+listId+" .item").forEach(item=>{
-item.style.display=item.textContent.toLowerCase().includes(q)?"":"none";
-});
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
 }
-const ranks=[
-["Helper",14],["Advanced Helper",16],["Lead Helper",18],
-["Support",20],["Super Support",22],["Support Leader",24],
-["Mod",26],["Super Mod",28],["Staff",30],["Super Staff",32],
-["Staff Leader",34],["Supervisor",36],["Admin",38],
-["Admin Supervisor",40],["Head Admin",42],["Admin Manager",44]
+
+const laws=[
+"يجب احترام جميع أعضاء السيرفر والإدارة دون استثناء",
+"يمنع استغلال الصلاحيات الإدارية لتحقيق مصالح شخصية",
+"يمنع استخدام الصلاحيات للانتقام أو تصفية الخلافات",
+"يجب التأكد من المخالفة قبل اتخاذ أي إجراء",
+"يمنع إعطاء العقوبات دون سبب واضح",
+"يجب الالتزام بالتسلسل الإداري والصلاحيات المحددة",
+"يمنع التدخل في قرارات المسؤولين دون صلاحية",
+"يمنع طلب الترقيات أو الضغط على الإدارة لاعتمادها",
+"يمنع التلاعب بنظام النقاط أو الإنجازات",
+"يجب التعامل مع التذاكر بجدية واحترام",
+"يمنع إهمال التذاكر دون توضيح السبب",
+"يمنع التدخل في تذكرة يتولاها إداري آخر دون إذن",
+"يجب المحافظة على سرية المعلومات الإدارية",
+"يمنع نشر المحادثات أو القرارات الخاصة دون تصريح",
+"يجب الالتزام بالتعليمات الصادرة من الإدارة المختصة",
+"يمنع إثارة المشاكل أو الخلافات بين الإداريين",
+"يجب التعاون مع الفريق الإداري عند الحاجة",
+"يمنع استخدام المنشن بشكل عشوائي أو مزعج",
+"يجب توضيح سبب أي إجراء إداري يتم اتخاذه",
+"يمنع التحيز بين الأعضاء عند تطبيق القوانين",
+"يجب التعامل مع جميع البلاغات بجدية",
+"يمنع تجاهل البلاغات المهمة دون سبب",
+"يجب المحافظة على سمعة BRAVE TOWN",
+"يمنع انتحال صفة إدارية أو استخدام رتبة غير مستحقة",
+"يجب الالتزام بأوقات ومهام المسؤولية عند استلامها",
+"يمنع إفشاء بيانات الأعضاء أو معلوماتهم الخاصة",
+"يجب الإبلاغ عن الأخطاء الإدارية وعدم إخفائها",
+"يمنع تعطيل عمل إداري آخر أو عرقلة مهامه",
+"يجب الالتزام بالأدب والهدوء أثناء النقاشات",
+"يحق للإدارة مراجعة أي مخالفة واتخاذ الإجراء المناسب"
 ];
-document.getElementById("rankRows").innerHTML=ranks.map(r=>
-`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`
-).join("");
+function renderLaws(items){
+  const container=document.getElementById("lawsList");
+  container.innerHTML="";
+  items.forEach((law,index)=>{
+    const originalIndex=laws.indexOf(law)+1;
+    const div=document.createElement("div");
+    div.className="law";
+    const number=document.createElement("span");
+    number.className="law-num";
+    number.textContent=String(originalIndex).padStart(2,"0");
+    const text=document.createElement("span");
+    text.textContent=law;
+    div.append(number,text);
+    container.appendChild(div);
+  });
+}
+function filterLaws(){
+  const q=document.getElementById("lawSearch").value.trim();
+  renderLaws(laws.filter(l=>l.includes(q)));
+}
+renderLaws(laws);
+
+const ranks=[
+["Helper",14],
+["Advanced Helper",16],
+["Lead Helper",18],
+["Support",20],
+["Super Support",22],
+["Support Leader",24],
+["Mod",26],
+["Super Mod",28],
+["Staff",30],
+["Super Staff",32],
+["Staff Leader",34],
+["Supervisor",36],
+["Admin",38],
+["Admin Supervisor",40],
+["Head Admin",42],
+["Admin Manager",44]
+];
+const rankTable=document.getElementById("rankTable");
+ranks.forEach((rank,index)=>{
+  const tr=document.createElement("tr");
+  const values=[String(index+1).padStart(2,"0"),rank[0],rank[1]+" نقطة",index===15?"إدارية":"إدارية"];
+  values.forEach((value,i)=>{
+    const td=document.createElement("td");
+    if(i===0){
+      const span=document.createElement("span");
+      span.className="rank-number";
+      span.textContent=value;
+      td.appendChild(span);
+    }else td.textContent=value;
+    tr.appendChild(td);
+  });
+  rankTable.appendChild(tr);
+});
 </script>
 </body>
 </html>
